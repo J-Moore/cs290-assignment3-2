@@ -1,7 +1,43 @@
 var gitList = [];
 
-function appendResults(returnObj) {
+function displayGists() {
 
+}
+
+function appendResults(returnObj) {
+  for (i in returnObj) {
+    var files = [];
+    var fentry = [];
+    console.log(returnObj[i]);
+    entryObj = {
+      id: returnObj[i]['id'],
+      url: returnObj[i]['url'],
+      description: returnObj[i]['description']
+    };
+    
+    if (entryObj['description'] == null) {
+      entryObj['description'] == "<no description provided>";
+    }
+    
+    for (j in returnObj[i]['files']) {
+      if (!returnObj[i]['files'].hasOwnProperty(j)) {
+        // do not want to loop through properties in the prototype
+        continue;
+      }
+      fentry = {
+        filename: j,
+        language: returnObj[i]['files'][j]['language']
+      };
+      files.push(fentry);
+    }
+    
+    entryObj['files'] = files;
+    
+    gitList.push(entryObj);
+  }
+  
+  console.log("gitList objects stored:");
+  console.log(gitList);
 }
 
 function getGists() {
