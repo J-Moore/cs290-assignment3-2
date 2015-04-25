@@ -1,0 +1,9 @@
+.halves {
+    border: 1;
+    float: left;
+    width: 50%;
+}
+
+#fetch {
+    float: right;
+}

@@ -7,5 +7,38 @@
 	<script src="src/assignment3-2.js"></script>
   </head>
   <body>
+    <div id="top-bar">
+      <form>
+        <fieldset>
+          <input type="checkbox" name="language" value="Python" />Python
+          <input type="checkbox" name="language" value="JSON" />JSON
+          <input type="checkbox" name="language" value="JavaScript" />JavaScript
+          <input type="checkbox" name="language" value="SQL" />SQL
+          <p>Number of pages to display:
+            <select id="pages">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+            
+          <input type="button" id="fetch" value="Fetch GISTS" onclick="getGists()" />
+          <p>
+        </fieldset>
+      </form>
+    </div>
+    
+    <div class="halves">
+      <h1>GISTS
+      <div id="display-gists">
+      </div>
+    </div>
+    
+    <div class="halves">
+      <h1>Favorite GISTS
+      <div id="fav-gists">
+      </div>
+    </div>
   </body>
 </html>
