@@ -7,6 +7,7 @@ window.onload = function() {
 }
 
 function loadFavoritesFromStorage() {
+  favoriteList = [];
   var readerArray = new Array();
   var fileNameArray = new Array();
   var files = [];
@@ -60,6 +61,26 @@ function loadFavoritesFromStorage() {
 function removeFavorite(unfavBtn) {
   console.log("unfavorited");
   console.log(unfavBtn);
+  
+  var gistID = unfavBtn.parentNode.className;
+  var favDiv = unfavBtn.parentNode.parentNode;
+  var gistDiv = document.getElementById("display-gists");
+  var thisBtn = unfavBtn;
+  
+  
+// the following can be improved but was easiest to code with existing functions
+  
+  // remove from localStorage
+  localStorage.removeItem(gistID);
+  
+  // reload favorite list from storage
+  loadFavoritesFromStorage();
+  
+  // display favorite list again
+  displayFavorites();
+  
+  // display gist lists again
+  displayGists();
 }
 
 
