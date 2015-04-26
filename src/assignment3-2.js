@@ -3,7 +3,7 @@ var favoriteList = [];
 
 window.onload = function() {
   loadFavoritesFromStorage();
-  
+  displayFavorites();
 }
 
 function loadFavoritesFromStorage() {
@@ -59,11 +59,9 @@ function loadFavoritesFromStorage() {
 
 function removeFavorite(unfavBtn) {
   console.log("unfavorited");
+  console.log(unfavBtn);
 }
 
-function displayFavorites() {
-
-}
 
 function addToFavorite(favBtn) {
   var gistID = favBtn.parentNode.className;
@@ -98,6 +96,58 @@ function addToFavorite(favBtn) {
   displayFavorites();
 }
 
+function displayFavorites() {
+  var i, j;
+  var favDiv = document.getElementById("fav-gists");
+  
+  favDiv.innerHTML = "";
+  
+  for (i in favoriteList) {
+    // make the div that will contain all info about the GIST
+    var fTagNodeDiv = document.createElement('div');
+
+    // dividing line
+    var fNodeHR = document.createElement('hr');
+    fTagNodeDiv.appendChild(fNodeHR);
+
+    // unfavorite button
+    var unfavoriteBtn = document.createElement('div');
+    unfavoriteBtn.innerHTML = "<input type='button' value='-' onclick='removeFavorite(this);'/>";
+    unfavoriteBtn.className = i;
+    unfavoriteBtn.style.cssFloat = 'left';
+    fTagNodeDiv.appendChild(unfavoriteBtn);
+    
+    // description of gist
+    var fTagNodeP1 = document.createElement('p');
+    var fTextNodeDescr = document.createTextNode(favoriteList[i]['description']);
+    fTagNodeP1.appendChild(fTextNodeDescr);
+    fTagNodeDiv.appendChild(fTagNodeP1);
+
+    // url of gist
+    var fTagNodeP2 = document.createElement('p');
+    var fTagNodeA = document.createElement('a');
+    var fTextNodeURL = document.createTextNode(favoriteList[i]['url']);
+    fTagNodeA.appendChild(fTextNodeURL);
+    fTagNodeA.href = fTextNodeURL;
+    fTagNodeP2.appendChild(fTagNodeA);
+    fTagNodeDiv.appendChild(fTagNodeP2);
+
+    // list of flies and the language they are in
+    var fFilesList = document.createElement('ul');
+    for (j in favoriteList[i]['files']) {
+      var fFileNameLI = document.createElement('li');
+      var textContents = favoriteList[i]['files'][j]['filename'] + "  -  " + favoriteList[i]['files'][j]['language'];
+      var fFileNameDescr = document.createTextNode(textContents);
+      fFileNameLI.appendChild(fFileNameDescr);
+      fFilesList.appendChild(fFileNameLI);
+    }
+    fTagNodeDiv.appendChild(fFilesList);
+
+    // finally, append the div to favorites div
+    favDiv.appendChild(fTagNodeDiv);
+  }
+}
+
 function displayGists() {
   var i, j;
   var gistDiv = document.getElementById("display-gists");
@@ -105,6 +155,14 @@ function displayGists() {
   gistDiv.innerHTML = "";
   
   for (i in gitList) {
+  
+    // if gist is already in favorite lists then skip it and do not display it
+    if (!(typeof favoriteList[i] === 'undefined')) {
+        console.log(i, ": gist is already in favorites");
+        continue;
+    }
+    
+    
     // make the div that will contain all info about the GIST
     var gTagNodeDiv = document.createElement('div');
 
