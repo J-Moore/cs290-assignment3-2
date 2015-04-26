@@ -5,20 +5,24 @@ function removeFavorite(unfavBtn) {
   console.log("unfavorited");
 }
 
+function displayFavorites() {
+
+}
+
 function addToFavorite(favBtn) {
+  var gistID = favBtn.parentNode.className;
   var favDiv = document.getElementById("fav-gists");
   var gistDiv = favBtn.parentNode.parentNode;
   var thisBtn = favBtn;
   
   // add to favoriteList
-  
+  favoriteList[gistID] = gitList[gistID];
   
   // remove from gists Div (from displaying)
   gistDiv.parentNode.removeChild(gistDiv);
   
   // call 'display favorites' function
-  
-  console.log(gistDiv);
+  displayFavorites();
 }
 
 function displayGists() {
@@ -30,14 +34,15 @@ function displayGists() {
   for (i in gitList) {
     // make the div that will contain all info about the GIST
     var gTagNodeDiv = document.createElement('div');
-    
+
     // dividing line
     var gNodeHR = document.createElement('hr');
     gTagNodeDiv.appendChild(gNodeHR);
-    
+
     // favorite button
     var favoriteBtn = document.createElement('div');
     favoriteBtn.innerHTML = "<input type='button' value='+' onclick='addToFavorite(this);'/>";
+    favoriteBtn.className = i;
     favoriteBtn.style.cssFloat = 'left';
     gTagNodeDiv.appendChild(favoriteBtn);
     
@@ -46,7 +51,7 @@ function displayGists() {
     var gTextNodeDescr = document.createTextNode(gitList[i]['description']);
     gTagNodeP1.appendChild(gTextNodeDescr);
     gTagNodeDiv.appendChild(gTagNodeP1);
-    
+
     // url of gist
     var gTagNodeP2 = document.createElement('p');
     var gTagNodeA = document.createElement('a');
@@ -55,7 +60,7 @@ function displayGists() {
     gTagNodeA.href = gTextNodeURL;
     gTagNodeP2.appendChild(gTagNodeA);
     gTagNodeDiv.appendChild(gTagNodeP2);
-    
+
     // list of flies and the language they are in
     var gFilesList = document.createElement('ul');
     for (j in gitList[i]['files']) {
@@ -67,7 +72,6 @@ function displayGists() {
     }
     gTagNodeDiv.appendChild(gFilesList);
 
-    
     // finally, append the div to gist div
     gistDiv.appendChild(gTagNodeDiv);
   }
@@ -103,7 +107,7 @@ function appendResults(returnObj) {
     
     entryObj['files'] = files;
     
-    gitList.push(entryObj);
+    gitList[returnObj[i]['id']] = entryObj;
   }
   
   console.log("gitList objects stored:");

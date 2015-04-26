@@ -2,7 +2,9 @@
     border: 1;
     font-size: 50%;
     float: left;
-    width: 50%;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 40%;
 }
 
 #fetch {
