@@ -1,6 +1,62 @@
 var gitList = [];
 var favoriteList = [];
 
+window.onload = function() {
+  loadFavoritesFromStorage();
+  
+}
+
+function loadFavoritesFromStorage() {
+  var readerArray = new Array();
+  var fileNameArray = new Array();
+  var files = [];
+  var fentry = [];
+  var favObj;
+  var storageString = "";
+  for (var i = 0; i < localStorage.length; i++) {
+    files = [];
+  
+    // loop through local storage and grab favorited gists
+    // (this probably isn't done the most efficient way but it
+    // wasn't immediately clear how best to save this data locally
+    storageString = localStorage.getItem(localStorage.key(i));
+    console.log(storageString);
+    readerArray = storageString.split(",");
+    console.log(readerArray);
+    
+    // confirm that the object read in localStorage is in fact
+    // a favorited gist string
+    // (this could be made more robust...)
+    if (readerArray.length < 4) {
+      continue;
+    }
+    if (readerArray[0].length < 20) {
+      continue;
+    }
+    
+    favObj = {
+      id: readerArray[0],
+      url: readerArray[2],
+      description: readerArray[1]
+    };
+    
+    for (var j = 3; j < readerArray.length; j++) {
+      fileNameArray = readerArray[j].split(":");
+      fentry = {
+        filename: fileNameArray[0],
+        language: fileNameArray[1]
+      };
+      files.push(fentry);
+    }
+    
+    favObj['files'] = files;
+    favoriteList[readerArray[0]] = favObj;
+    
+  }
+  
+  console.log(favoriteList);
+}
+
 function removeFavorite(unfavBtn) {
   console.log("unfavorited");
 }
@@ -15,8 +71,25 @@ function addToFavorite(favBtn) {
   var gistDiv = favBtn.parentNode.parentNode;
   var thisBtn = favBtn;
   
+  var storageString = "";
+  
   // add to favoriteList
   favoriteList[gistID] = gitList[gistID];
+  
+  // store in local storage
+  // format of string saved in local storage:
+  // id , description , url , file:language (repeated as often as needed)
+  storageString = storageString + gistID;
+  storageString = storageString + "," + favoriteList[gistID]['description'];
+  storageString = storageString + "," + favoriteList[gistID]['url'];
+  for (fn in favoriteList[gistID]['files']) {
+    storageString = storageString + "," +
+                    favoriteList[gistID]['files'][fn]['filename'] +
+                    ":" + favoriteList[gistID]['files'][fn]['language'];
+  }
+  console.log(storageString);
+  localStorage.setItem(gistID, storageString);
+  console.log(localStorage.length);
   
   // remove from gists Div (from displaying)
   gistDiv.parentNode.removeChild(gistDiv);
