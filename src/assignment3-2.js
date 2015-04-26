@@ -1,7 +1,22 @@
 var gitList = [];
+var favoriteList = [];
+
+function removeFavorite(unfavBtn) {
+  console.log("unfavorited");
+}
 
 function addToFavorite(favBtn) {
+  var favDiv = document.getElementById("fav-gists");
   var gistDiv = favBtn.parentNode.parentNode;
+  var thisBtn = favBtn;
+  
+  // add to favoriteList
+  
+  
+  // remove from gists Div (from displaying)
+  gistDiv.parentNode.removeChild(gistDiv);
+  
+  // call 'display favorites' function
   
   console.log(gistDiv);
 }
