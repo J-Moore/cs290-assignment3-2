@@ -16,7 +16,7 @@ function loadFavoritesFromStorage() {
   var storageString = "";
   for (var i = 0; i < localStorage.length; i++) {
     files = [];
-  
+
     // loop through local storage and grab favorited gists
     // (this probably isn't done the most efficient way but it
     // wasn't immediately clear how best to save this data locally
@@ -24,7 +24,7 @@ function loadFavoritesFromStorage() {
     //console.log(storageString);
     readerArray = storageString.split(",");
     //console.log(readerArray);
-    
+
     // confirm that the object read in localStorage is in fact
     // a favorited gist string
     // (this could be made more robust...)
@@ -34,13 +34,13 @@ function loadFavoritesFromStorage() {
     if (readerArray[0].length < 20) {
       continue;
     }
-    
+
     favObj = {
       id: readerArray[0],
       url: readerArray[2],
       description: readerArray[1]
     };
-    
+
     for (var j = 3; j < readerArray.length; j++) {
       fileNameArray = readerArray[j].split(":");
       fentry = {
@@ -49,52 +49,49 @@ function loadFavoritesFromStorage() {
       };
       files.push(fentry);
     }
-    
+
     favObj['files'] = files;
     favoriteList[readerArray[0]] = favObj;
-    
   }
-  
+
   //console.log(favoriteList);
 }
 
 function removeFavorite(unfavBtn) {
   //console.log("unfavorited");
   //console.log(unfavBtn);
-  
+
   var gistID = unfavBtn.parentNode.className;
   var favDiv = unfavBtn.parentNode.parentNode;
   var gistDiv = document.getElementById("display-gists");
   var thisBtn = unfavBtn;
-  
-  
+
 // the following can be improved but was easiest to code with existing functions
-  
+
   // remove from localStorage
   localStorage.removeItem(gistID);
-  
+
   // reload favorite list from storage
   loadFavoritesFromStorage();
-  
+
   // display favorite list again
   displayFavorites();
-  
+
   // display gist lists again
   displayGists();
 }
-
 
 function addToFavorite(favBtn) {
   var gistID = "" + favBtn.parentNode.className;
   var favDiv = document.getElementById("fav-gists");
   var gistDiv = favBtn.parentNode.parentNode;
   var thisBtn = favBtn;
-  
+
   var storageString = "";
-  
+
   // add to favoriteList
   favoriteList[gistID] = gitList[gistID];
-  
+
   // store in local storage
   // format of string saved in local storage:
   // id , description , url , file:language (repeated as often as needed)
@@ -109,10 +106,10 @@ function addToFavorite(favBtn) {
   //console.log(storageString);
   localStorage.setItem(gistID, storageString);
   //console.log(localStorage.length);
-  
+
   // remove from gists Div (from displaying)
   gistDiv.parentNode.removeChild(gistDiv);
-  
+
   // call 'display favorites' function
   displayFavorites();
 }
@@ -120,9 +117,9 @@ function addToFavorite(favBtn) {
 function displayFavorites() {
   var i, j;
   var favDiv = document.getElementById("fav-gists");
-  
+
   favDiv.innerHTML = "";
-  
+
   for (i in favoriteList) {
     // make the div that will contain all info about the GIST
     var fTagNodeDiv = document.createElement('div');
@@ -137,7 +134,7 @@ function displayFavorites() {
     unfavoriteBtn.className = i;
     unfavoriteBtn.style.cssFloat = 'left';
     fTagNodeDiv.appendChild(unfavoriteBtn);
-    
+
     // description of gist
     var fTagNodeP1 = document.createElement('p');
     var fTextNodeDescr = document.createTextNode(favoriteList[i]['description']);
@@ -172,7 +169,7 @@ function displayFavorites() {
 function displayGists() {
   var i, j;
   var gistDiv = document.getElementById("display-gists");
-  
+
   // for displaying languages
   var getPython = document.getElementsByName("language")[0].checked;
   var getJSON = document.getElementsByName("language")[1].checked;
@@ -180,20 +177,18 @@ function displayGists() {
   var getSQL = document.getElementsByName("language")[3].checked;
   var filterChecked = getPython || getJSON || getJavaScript || getSQL
   var displayThis = false;
-  
-  
+
+
   gistDiv.innerHTML = "";
-  
+
   for (i in gitList) {
-  
+
     // if gist is already in favorite lists then skip it and do not display it
     if (!(typeof favoriteList[i] === 'undefined')) {
         //console.log(i, ": gist is already in favorites");
         continue;
     }
-    
-    // filter by language    
-    
+
     // make the div that will contain all info about the GIST
     var gTagNodeDiv = document.createElement('div');
 
@@ -207,7 +202,7 @@ function displayGists() {
     favoriteBtn.className = i;
     favoriteBtn.style.cssFloat = 'left';
     gTagNodeDiv.appendChild(favoriteBtn);
-    
+
     // description of gist
     var gTagNodeP1 = document.createElement('p');
     var gTextNodeDescr = document.createTextNode(gitList[i]['description']);
@@ -231,7 +226,7 @@ function displayGists() {
       var gFileNameDescr = document.createTextNode(textContents);
       gFileNameLI.appendChild(gFileNameDescr);
       gFilesList.appendChild(gFileNameLI);
-      
+
       // check language filters
       // if one file meets the language checked we display the gist
       if (gitList[i]['files'][j]['language'] != null) {
@@ -248,7 +243,6 @@ function displayGists() {
           displayThis = true;
         }
       }
-       
     }
     gTagNodeDiv.appendChild(gFilesList);
 
@@ -271,11 +265,11 @@ function appendResults(returnObj) {
       url: returnObj[i]['url'],
       description: returnObj[i]['description']
     };
-    
+
     if (entryObj['description'] == null) {
       entryObj['description'] == "<no description provided>";
     }
-    
+
     for (j in returnObj[i]['files']) {
       if (!returnObj[i]['files'].hasOwnProperty(j)) {
         // do not want to loop through properties in the prototype
@@ -287,28 +281,28 @@ function appendResults(returnObj) {
       };
       files.push(fentry);
     }
-    
+
     entryObj['files'] = files;
-    
+
     gitList[returnObj[i]['id']] = entryObj;
   }
-  
+
   //console.log("gitList objects stored:");
   //console.log(gitList);
-  
+
   displayGists();
 }
 
 function getGists() {
   var getPython, getJSON, getJavaScript, getSQL, pages, parameters;
-  
+
   gitList = [];
   getPython = document.getElementsByName("language")[0].checked;
   getJSON = document.getElementsByName("language")[1].checked;
   getJavaScript = document.getElementsByName("language")[2].checked;
   getSQL = document.getElementsByName("language")[3].checked;
   numPages = document.getElementById("pages").value;
-  
+
   parameters = {
     showPython: getPython,
     showJSON: getJSON,
@@ -317,16 +311,15 @@ function getGists() {
     per_page: numPages * 30
   };
 
-  
   //console.log(parameters);
   getRequest(parameters, 1);
-  
+
   if (parameters['per_page'] > 100) {
     getRequest(parameters, 2);
-    
+
     //console.log(parameters);
   }
-  
+
 }
 
 function getRequest(parameters, page) {
